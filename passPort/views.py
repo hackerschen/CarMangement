@@ -26,32 +26,36 @@ def GetAllPassPort(request):
 def AddPassPort(request):
     result = {"resCode": '200', "message": 'success', "data": []}
     data = request.GET.dict()
+    print('add-data', data)
     passport = passPort.objects.create(**data)
-    serial_data = serializers.serialize('python', [passport])
-    serial_data = serial_data[0]
-    id = serial_data['pk']
-    serial_data = serial_data['fields']
-    serial_data['id'] = id
-    result['data'] = serial_data
+    # serial_data = serializers.serialize('python', [passport])
+    # serial_data = serial_data[0]
+    # id = serial_data['pk']
+    # serial_data = serial_data['fields']
+    # serial_data['id'] = id
+    # result['data'] = serial_data
     return JsonResponse(result)
 
 def UpdatePassPort(request):
     result = {"resCode": '200', "message": 'success', "data": []}
     data = request.GET.dict()
+    # print(request.GET)
+    # return HttpResponse(status=200)
     id = data['id']
     passport = passPort.objects.filter(id=id).update(**data)
-    serial_data = serializers.serialize('python', [passport])
-    serial_data = serial_data[0]
-    id = serial_data['pk']
-    serial_data = serial_data['fields']
-    serial_data['id'] = id
-    result['data'] = serial_data
+    # serial_data = serializers.serialize('python', [passport])
+    # serial_data = serial_data[0]
+    # id = serial_data['pk']
+    # serial_data = serial_data['fields']
+    # serial_data['id'] = id
+    # result['data'] = serial_data
     return JsonResponse(result)
 
 def DeletePassPort(request):
+    result = {"resCode": '200'}
     id = request.GET.get('id')
     passport = passPort.objects.filter(id=id).delete()
-    return HttpResponse(status=200)
+    return JsonResponse(result)
 
 def Search(request):
     name = request.GET.get('name','')
