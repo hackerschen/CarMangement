@@ -1,3 +1,5 @@
+import json
+
 from django.core import serializers
 from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render
@@ -12,14 +14,25 @@ def hello(request):
 def GetAllPassPort(request):
     result = {"resCode": '200', "message": 'success', "data": []}
     passPortAll = passPort.objects.all()
-    result['data'] = serializers.serialize('python',passPortAll)
+    serial_data = serializers.serialize('python',passPortAll)
+    data = []
+    for i in serial_data:
+        j = i['fields']
+        j['id'] = i['pk']
+        data.append(j)
+    result['data'] = data
     return JsonResponse(result)
 
 def AddPassPort(request):
     result = {"resCode": '200', "message": 'success', "data": []}
     data = request.GET.dict()
     passport = passPort.objects.create(**data)
-    result['data'] = serializers.serialize('python',passport)
+    serial_data = serializers.serialize('python', [passport])
+    serial_data = serial_data[0]
+    id = serial_data['pk']
+    serial_data = serial_data['fields']
+    serial_data['id'] = id
+    result['data'] = serial_data
     return JsonResponse(result)
 
 def UpdatePassPort(request):
@@ -27,7 +40,12 @@ def UpdatePassPort(request):
     data = request.GET.dict()
     id = data['id']
     passport = passPort.objects.filter(id=id).update(**data)
-    result['data'] = serializers.serialize('python', passport)
+    serial_data = serializers.serialize('python', [passport])
+    serial_data = serial_data[0]
+    id = serial_data['pk']
+    serial_data = serial_data['fields']
+    serial_data['id'] = id
+    result['data'] = serial_data
     return JsonResponse(result)
 
 def DeletePassPort(request):
@@ -50,7 +68,13 @@ def Search(request):
         data = passPort.objects.filter(number=number)
     if data is None:
         return HttpResponseBadRequest()
-    result['data'] = serializers.serialize('python', data)
+    serial_data = serializers.serialize('python', data)
+    data = []
+    for i in serial_data:
+        j = i['fields']
+        j['id'] = i['pk']
+        data.append(j)
+    result['data'] = data
     return JsonResponse(result)
 
 
