@@ -20,4 +20,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     re_path(r'passcard/', include('passCard.urls')),
     re_path(r'passport/', include('passPort.urls')),
+    re_path(r'user/', include('user.urls')),
 ]
