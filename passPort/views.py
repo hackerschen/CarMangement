@@ -3,14 +3,14 @@ import json
 from django.core import serializers
 from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render
-
+from django.views.decorators.csrf import csrf_exempt
 from passPort.models import passPort
 
 
 # Create your views here.
 def hello(request):
     return HttpResponse("<p>hello world！</p>")
-
+# @csrf_exempt
 def GetAllPassPort(request):
     result = {"resCode": '200', "message": 'success', "data": []}
     passPortAll = passPort.objects.all()
@@ -21,7 +21,7 @@ def GetAllPassPort(request):
         j['id'] = i['pk']
         data.append(j)
     result['data'] = data
-    return JsonResponse(result)
+    return JsonResponse(result, headers={'Access-Control-Allow-Origin':'*'})
 
 def AddPassPort(request):
     result = {"resCode": '200', "message": 'success', "data": []}

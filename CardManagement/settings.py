@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-wz=piy96739nndh*er!k+a+0zzyhpp2ti)1#subwinlp^f=#eu
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'passCard',
     'passPort',
 ]
@@ -44,24 +45,46 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+
+    # 'CarMangement.middleware.CoreMiddle',
     # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+CORS_ALLOW_CREDENTIALS = True  # 解决跨域
+CORS_ORIGIN_ALLOW_ALL = True  # 解决跨域
+# 允许任何表头
+CORS_ALLOW_HEADERS = ("*")  # 解决跨域
 
-CORS_ALLOW_CREDENTIALS = True
+# 允许的标头
+# CORS_ALLOW_HEADERS = (
+#     'accept',
+#     'accept-encoding',
+#     'authorization',
+#     'content-type',
+#     'dnt',
+#     'origin',
+#     'user-agent',
+#     'x-csrftoken',
+#     'x-requested-with',
+# )
 
-CORS_ORIGIN_ALLOW_ALL = True
-CROS_ALLOW_HEADERS = ("*")
+# 设置白名单
 CORS_ORIGIN_WHITELIST = ()
+# 对应的发送的请求的跨域
 CORS_ALLOW_METHODS = (
-    'GET',
     'DELETE',
-    'POST'
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+    'VIEW',
 )
+
 
 ROOT_URLCONF = 'CardManagement.urls'
 
