@@ -23,6 +23,18 @@ def GetAllPassPort(request):
     result['data'] = data
     return JsonResponse(result, headers={'Access-Control-Allow-Origin':'*'})
 
+def GetAPassPort(request):
+    result = {"resCode": '200', "message": 'success', "data": []}
+    passPortAll = passPort.objects.
+    serial_data = serializers.serialize('python',passPortAll)
+    data = []
+    for i in serial_data:
+        j = i['fields']
+        j['id'] = i['pk']
+        data.append(j)
+    result['data'] = data
+    return JsonResponse(result, headers={'Access-Control-Allow-Origin':'*'})
+
 def AddPassPort(request):
     result = {"resCode": '200', "message": 'success', "data": []}
     data = request.GET.dict()

@@ -10,10 +10,15 @@ from django.shortcuts import render
 
 def uregist(request):
     if request.method == 'GET':
+        # print('get')
         return HttpResponseBadRequest()
     if request.method == 'POST':
-        name = request.POST.get('name')
+        print('post')
+        name = request.POST.get('username')
         password = request.POST.get('password')
+        # print('name, password', name, password)
+        if name is None:
+            return HttpResponseBadRequest()
         User.objects.create_user(username=name, password=password)
         return HttpResponse(status=200)
     return HttpResponseBadRequest()
@@ -23,9 +28,11 @@ def ulogin(request):
     if request.method == 'GET':
         return HttpResponseBadRequest()
     if request.method == 'POST':
-        name = request.POST.get('name')
+        print('post')
+        name = request.POST.get('username')
         password = request.POST.get('password')
         # 验证用户名和密码，通过的话，返回User对象
+        print('name, password', name, password)
         user = auth.authenticate(username=name, password=password)
         if user:
             auth.login(request, user)
