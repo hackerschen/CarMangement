@@ -10,4 +10,5 @@ urlpatterns = [
     re_path(r'delete/', views.DeletePassPort),
     re_path(r'search/', views.Search),
     re_path(r'geta/', views.GetAPassPort),
+    re_path(r'fileAdd/', views.FileAdd)
 ]

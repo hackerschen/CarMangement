@@ -26,8 +26,8 @@ def GetAllPassPort(request):
 
 def GetAPassPort(request):
     result = {"resCode": '200', "message": 'success', "data": []}
-    page = request.GET.get('page', 1)
-    limit = request.GET.get('limit', 10)
+    page = request.GET.get('currentPage', 1)
+    limit = request.GET.get('pageSize', 10)
     passPortAll = passPort.objects.all()
     paginator = Paginator(passPortAll, limit)
     page_data = paginator.get_page(page)
@@ -38,17 +38,20 @@ def GetAPassPort(request):
         j['id'] = i['pk']
         data.append(j)
     result['data'] = data
+    result['count'] = paginator.count
     return JsonResponse(result, headers={'Access-Control-Allow-Origin':'*'})
 
 def FileAdd(request):
     result = {"resCode": '200', "message": 'success', "data": []}
     received_file = request.FILES.get("upload_file")
-    fileName = os.path.join(BASE_DIR, 'temp', received_file)
+    fileName = os.path.join(BASE_DIR, 'temp', received_file.name)
     saveFile(received_file, fileName)
     total_names = ['number','name','sex','native_place','company_name','save_number','valid_date','brith_date','get_date','out_date','last_date','state']
+    # print(fileName)
     df = pd.read_csv(fileName, names=total_names)
+    # print(df)
     datas = df.to_dict(orient='records')
-    for data in datas:
+    for data in datas[1:]:
         passPort.objects.create(**data)
     return JsonResponse(result, headers={'Access-Control-Allow-Origin':'*'})
 
@@ -97,11 +100,14 @@ def Search(request):
     if name is None and number is None:
         return HttpResponseBadRequest()
     data = None
-    print(name)
-    if name is not None:
-        print(name)
+    if name != '' and number != '':
+        print('name, number is not None')
+        data = passPort.objects.filter(name=name, number=number)
+    elif number == '':
+        print('number is None')
         data = passPort.objects.filter(name=name)
     else:
+        print('name is None')
         data = passPort.objects.filter(number=number)
     if data is None:
         return HttpResponseBadRequest()
@@ -112,6 +118,7 @@ def Search(request):
         j['id'] = i['pk']
         data.append(j)
     result['data'] = data
+    result['count'] = len(data)
     return JsonResponse(result)
 
 
